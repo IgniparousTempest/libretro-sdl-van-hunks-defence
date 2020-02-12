@@ -316,7 +316,8 @@ bool Game::IsLevelOver() {
 }
 
 int Game::PointScaleFactor() {
-    return std::clamp((level - 1) / 2 + 1, 0, 6);
+//    return std::clamp((level - 1) / 2 + 1, 0, 6); //TODO: C++17 only
+    return std::max(0, std::min((level - 1) / 2 + 1, 6));
 }
 
 std::map<enum PlayerId, Score *> Game::Scores() { return scores; }
