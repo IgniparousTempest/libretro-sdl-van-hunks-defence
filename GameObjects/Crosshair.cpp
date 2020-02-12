@@ -3,7 +3,9 @@
 Crosshair::Crosshair(Assets *assets, enum PlayerId playerId, float x, float y, int xMax, int yMax) : xMax(xMax), yMax(yMax) {
     std::string assetName = "crosshair" + std::to_string(PlayerIdExtensions::Value(playerId));
     texture = assets->get(assetName);
-    auto [ w, h ] = assets->dimensions(assetName);
+    auto dimensions = assets->dimensions(assetName); //TODO: C++17: auto [ w, h ] =
+    auto w = std::get<0>(dimensions);
+    auto h = std::get<1>(dimensions);
     rect.x = x - w / 2.0f;
     rect.y = y - h / 2.0f;
     rect.w = w;

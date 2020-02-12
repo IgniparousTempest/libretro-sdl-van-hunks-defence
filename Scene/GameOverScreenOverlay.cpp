@@ -59,9 +59,10 @@ bool GameOverScreenOverlay::IsComplete() {
 
 std::vector<PlayerId> GameOverScreenOverlay::ReadyPlayers() {
     std::vector<PlayerId> players;
-    for  (auto &[id, state] : readyPlayers)
-        if (state)
-            players.push_back(id);
+    //TODO: c++17 s/auto const &entry/auto const &[,]/
+    for  (auto const &entry : readyPlayers)
+        if (entry.second)
+            players.push_back(entry.first);
     return players;
 }
 

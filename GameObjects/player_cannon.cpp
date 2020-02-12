@@ -2,7 +2,9 @@
 
 PlayerCannon::PlayerCannon(Assets* assets, int shipX, int shipY) {
     texture = assets->get("cannon");
-    auto [ w, h ] = assets->dimensions("cannon");
+    auto dimensions = assets->dimensions("cannon"); //TODO: C++17: auto [ w, h ] =
+    auto w = std::get<0>(dimensions);
+    auto h = std::get<1>(dimensions);
     rect.x = shipX + 87 - w / 2.0f;
     rect.y = shipY + 33 - h / 2.0f;
     rect.w = w;

@@ -81,12 +81,12 @@ public:
 
     ~Assets() {
         // Free up textures
-        for (auto &[key, tex] : assets)
-            SDL_DestroyTexture(tex);
+        for (auto const& entry : assets)
+            SDL_DestroyTexture(entry.second);
 
         // Free up sounds
-        for (auto &[key, sound] : sounds)
-            Mix_FreeChunk(sound);
+        for (auto const& entry : sounds)
+            Mix_FreeChunk(entry.second);
 
         // Free up fonts
         FC_FreeFont(font);

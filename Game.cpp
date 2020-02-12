@@ -26,8 +26,8 @@ void Game::StartNewGame(std::vector<PlayerId> readyPlayers) {
     SpawnShips(readyPlayers);
 
     // Reset Scores
-    for (auto &[key, score] : scores)
-        delete score;
+    for (auto const &entry : scores)
+        delete entry.second;
     scores = {};
     for(auto const& playerId : PlayerIdExtensions::HumanPlayers())
         scores.emplace(playerId, new Score(assets, players[playerId]->centreX(), 0));
@@ -151,8 +151,8 @@ void Game::Update(double frameTime) {
 
 void Game::Render(SDL_Renderer *renderer) {
     background->Render(renderer);
-    for(auto const& [id, player] : players)
-        player->Render(renderer);
+    for(auto const& entry : players)
+        entry.second->Render(renderer);
     for (auto &obj : treasureShips)
         obj->Render(renderer);
     for (auto &obj : burningShips)
@@ -161,10 +161,10 @@ void Game::Render(SDL_Renderer *renderer) {
         obj->Render(renderer);
     for (auto &obj : explosions)
         obj->Render(renderer);
-    for(auto const& [id, player] : players)
-        player->RenderTopLayers(renderer);
-    for(auto const& [id, score] : scores)
-        score->Render(renderer);
+    for(auto const& entry : players)
+        entry.second->RenderTopLayers(renderer);
+    for(auto const& entry : scores)
+        entry.second->Render(renderer);
 
     if (state == GameState::scoring)
         scoreScreenOverlay->Render(renderer);
@@ -175,15 +175,16 @@ void Game::Render(SDL_Renderer *renderer) {
 
 void Game::SpawnShips(std::vector<enum PlayerId> readyPlayers) {
     // Clean up previous game;
-    for (auto &[key, ship] : players)
-        delete ship;
+    for (auto const &entry : players)
+        delete entry.second;
     for (auto &ship : treasureShips)
         delete ship;
     players = {};
     treasureShips = {};
 
     // Set parameters
-    auto [ w, h ] = assets->dimensions("ship1");
+    auto dimensions = assets->dimensions("ship1"); //TODO: C++17: auto [ w, h ] =
+    auto w = std::get<0>(dimensions);
     auto offset = w / 2;
     auto x1 = w / 2 + offset;
     auto x4 = screenWidth - w / 2 - offset;

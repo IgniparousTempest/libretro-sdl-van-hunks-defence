@@ -2,7 +2,9 @@
 
 CannonBallTrail::CannonBallTrail(Assets *assets, float x, float y) {
     texture = assets->get("cannon_ball_trail");
-    auto [w, h] = assets->dimensions("cannon_ball_trail");
+    auto dimensions = assets->dimensions("cannon_ball_trail"); //TODO: C++17: auto [ w, h ] =
+    auto w = std::get<0>(dimensions);
+    auto h = std::get<1>(dimensions);
     rect.x = x - w / 2;
     rect.y = y - h / 2;
     rect.w = w;

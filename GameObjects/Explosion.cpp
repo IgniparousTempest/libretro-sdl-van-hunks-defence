@@ -2,7 +2,8 @@
 
 Explosion::Explosion(Assets *assets, enum PlayerId playerId, float x, float y) : playerId(playerId) {
     texture = assets->get("explosion");
-    auto [ w, h ] = assets->dimensions("explosion");
+    auto dimensions = assets->dimensions("explosion"); //TODO: C++17: auto [ w, h ] =
+    auto h = std::get<1>(dimensions);
     rect.x = x - h / 2.0f;
     rect.y = y - h / 2.0f;
     rect.w = h;
