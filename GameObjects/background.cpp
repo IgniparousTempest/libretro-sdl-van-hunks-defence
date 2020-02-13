@@ -138,15 +138,15 @@ void Background::Render(SDL_Renderer *renderer) {
     src.w = hWater;
     src.h = hWater;
 
-    SDL_FRect dest;
+    SDL_Rect dest;
     dest.w = tileWidth;
     dest.h = tileHeight;
     for (int x = 0; x < width; ++x) {
         for (int y = 0; y < height; ++y) {
-            dest.x = tileWidth * static_cast<float>(x);
-            dest.y = tileHeight * static_cast<float>(y);
-            SDL_RenderCopyF(renderer, water, &src, &dest);
-            SDL_RenderCopyF(renderer, tiles.at(y).at(x), nullptr, &dest);
+            dest.x = tileWidth * x;
+            dest.y = tileHeight * y;
+            SDL_RenderCopy(renderer, water, &src, &dest);
+            SDL_RenderCopy(renderer, tiles.at(y).at(x), nullptr, &dest);
         }
     }
 }

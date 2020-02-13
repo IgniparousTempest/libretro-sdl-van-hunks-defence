@@ -39,10 +39,10 @@ void CannonBall::Update(double delta) {
 
 void CannonBall::Render(SDL_Renderer* renderer) {
     trail->Render(renderer, centreX(), centreY(), traveled, angle);
-    SDL_FRect destRect;
+    SDL_Rect destRect;
     destRect.w = w() * scale;
     destRect.h = h() * scale;
-    destRect.x = x() + (w() - destRect.w) / 2;
-    destRect.y = y() + (h() - destRect.h) / 2;
-    SDL_RenderCopyF(renderer, texture, nullptr, &destRect);
+    destRect.x = x() + (w() - destRect.w) / 2.0f;
+    destRect.y = y() + (h() - destRect.h) / 2.0f;
+    SDL_RenderCopy(renderer, texture, nullptr, &destRect);
 }

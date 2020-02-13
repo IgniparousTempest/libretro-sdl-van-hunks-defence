@@ -1,7 +1,6 @@
 #include <iostream>
 #include <algorithm>
 #include "Game.hpp"
-#include "SDL_extensions.h"
 #include "GameObjects/BurningTreasureShip.hpp"
 #include "GameObjects/BurningPlayerShip.hpp"
 
