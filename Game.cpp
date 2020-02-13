@@ -97,8 +97,8 @@ void Game::Update(double frameTime) {
                 auto dest = obj->Destination();
                 for (auto &playerId : PlayerIdExtensions::HumanPlayers()) {
                     auto player = players[playerId];
-                    auto rect = player->Rect();
-                    if (SDL_FPointInFRect(&dest, &rect)) {
+                    FRect rect = {player->x(), player->y(), static_cast<float>(player->w()), static_cast<float>(player->h())};
+                    if (FPointInFRect(&dest, &rect)) {
                         std::cout << "Enemy cannon ball hit player " << PlayerIdExtensions::Value(playerId) << "."
                                   << std::endl;
                         BurnPlayerShip(player);
@@ -106,8 +106,8 @@ void Game::Update(double frameTime) {
                     }
                 }
                 for (auto &ship : treasureShips) {
-                    auto rect = ship->Rect();
-                    if (SDL_FPointInFRect(&dest, &rect)) {
+                    FRect rect = {ship->x(), ship->y(), static_cast<float>(ship->w()), static_cast<float>(ship->h())};
+                    if (FPointInFRect(&dest, &rect)) {
                         std::cout << "Enemy cannon ball hit a treasure ship." << std::endl;
                         burningShips.push_back(new BurningTreasureShip(assets, ship->centreX(), ship->centreY()));
                         ship->Destroy();

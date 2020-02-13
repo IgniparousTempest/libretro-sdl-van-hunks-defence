@@ -4,10 +4,8 @@ Explosion::Explosion(Assets *assets, enum PlayerId playerId, float x, float y) :
     texture = assets->get("explosion");
     auto dimensions = assets->dimensions("explosion"); //TODO: C++17: auto [ w, h ] =
     auto h = std::get<1>(dimensions);
-    rect.x = x - h / 2.0f;
-    rect.y = y - h / 2.0f;
-    rect.w = h;
-    rect.h = h;
+    SetPosition(x - h / 2.0f, y - h / 2.0f);
+    SetDimensions(h, h);
     anim.animateOnce = true;
     anim.MaxFrames = 3;
     anim.SetFrameRate(400);
@@ -17,7 +15,7 @@ Explosion::Explosion(Assets *assets, enum PlayerId playerId, float x, float y) :
 void Explosion::Update(double deltaTime) {
     anim.Update();
     if (anim.IsComplete())
-        destroyed = true;
+        Destroy();
 }
 
 void Explosion::Render(SDL_Renderer *renderer) {
@@ -26,5 +24,6 @@ void Explosion::Render(SDL_Renderer *renderer) {
     src.y = 0;
     src.w = (int)h();
     src.h = (int)h();
-    SDL_RenderCopyF(renderer, texture, &src, &rect);
+    auto dst = Rect();
+    SDL_RenderCopy(renderer, texture, &src, &dst);
 }

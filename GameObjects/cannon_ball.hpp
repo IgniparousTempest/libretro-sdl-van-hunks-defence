@@ -13,10 +13,9 @@ public:
     ~CannonBall();
     void Update(double delta) override;
     void Render(SDL_Renderer* renderer) override;
-    SDL_FPoint Destination() { return {destX, destY}; }
+    FPoint Destination() { return {destX, destY}; }
     bool HasReachedDestination() const { return traveled > distance; }
     float Radius() { return w() / 2.0f; }
-    void Destroy() { destroyed = true; }
     enum PlayerId PlayerId() { return playerId; }
     void MakeExplosion(bool shouldMakeExplosion) { this->shouldMakeExplosion = shouldMakeExplosion; }
     bool ShouldMakeExplosion() { return shouldMakeExplosion; }

@@ -12,16 +12,14 @@ Player::Player(Assets* assets, enum PlayerId playerId, int x, int bottomY, int s
     auto height = std::get<1>(dimensions);
     dimensions = assets->dimensions("cannon_ball"); //TODO: C++17: auto [ ballWidth, ballHeight ] =
     auto ballHeight = std::get<1>(dimensions);
-    rect.x = x - width / 2.0f;
-    rect.y = bottomY - height - ballHeight;
-    rect.w = width;
-    rect.h = height;
+    SetPosition(x - width / 2.0f, bottomY - height - ballHeight);
+    SetDimensions(width, height);
 
     // Cannon
-    cannon = new PlayerCannon(assets, rect.x, rect.y);
+    cannon = new PlayerCannon(assets, this->x(), this->y());
 
     // Crosshair
-    crosshair = new Crosshair(assets, playerId, x, rect.y - rect.h * 2, screenWidth, rect.y);
+    crosshair = new Crosshair(assets, playerId, x, this->y() - this->h() * 2, screenWidth, this->y());
 
     recalculateCannonAngle();
 }

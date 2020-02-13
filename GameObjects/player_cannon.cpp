@@ -1,24 +1,18 @@
 #include "player_cannon.hpp"
 
-PlayerCannon::PlayerCannon(Assets* assets, int shipX, int shipY) {
-    texture = assets->get("cannon");
-    auto dimensions = assets->dimensions("cannon"); //TODO: C++17: auto [ w, h ] =
-    auto w = std::get<0>(dimensions);
-    auto h = std::get<1>(dimensions);
-    rect.x = shipX + 87 - w / 2.0f;
-    rect.y = shipY + 33 - h / 2.0f;
-    rect.w = w;
-    rect.h = h;
+PlayerCannon::PlayerCannon(Assets* assets, int shipX, int shipY) :
+        GameObject(assets->get("cannon"), shipX + 87, shipY + 33) {
 }
 
 void PlayerCannon::recalculateAngle(float crosshairX, float crosshairY) {
     float x1 = crosshairX;
-    float x2 = rect.x + rect.w / 2.0f;
+    float x2 = centreX();
     float y1 = crosshairY;
-    float y2 = rect.y + rect.h / 2.0f;
+    float y2 = centreY();
     angle = atan2(y1 - y2, x1 - x2) * 180.0f / M_PI;
 }
 
 void PlayerCannon::Render(SDL_Renderer *renderer) {
-    SDL_RenderCopyExF(renderer, texture, nullptr, &rect, angle, nullptr, SDL_FLIP_NONE);
+    auto rect = Rect();
+    SDL_RenderCopyEx(renderer, texture, nullptr, &rect, angle, nullptr, SDL_FLIP_NONE);
 }

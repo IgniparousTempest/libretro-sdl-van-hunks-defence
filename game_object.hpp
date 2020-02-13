@@ -2,6 +2,7 @@
 #define SUPER_MISSILE_COMMAND_GAME_OBJECT_HPP
 
 #include <SDL_render.h>
+#include "geometry.hpp"
 
 class GameObject {
 public:
@@ -9,49 +10,77 @@ public:
     GameObject(SDL_Texture* texture, float x, float y) : texture(texture) {
         int w, h;
         SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
-        rect.x = x - w / 2.0;
-        rect.y = y - h / 2.0;
-        rect.w = w;
-        rect.h = h;
+        SetPosition(x - w / 2.0f, y - h / 2.0f);
+        SetDimensions(w, h);
     }
     GameObject(SDL_Texture* texture, float x, float y, float centreX, float centreY) : texture(texture) {
         int w, h;
         SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
-        rect.x = x - centreX;
-        rect.y = y - centreY;
-        rect.w = w;
-        rect.h = h;
+        SetPosition(x - centreX, y - centreY);
+        SetDimensions(w, h);
     }
     GameObject(SDL_Texture* texture, float x, float y, float centreX, float centreY, float width) : texture(texture) {
         int w, h;
         SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
-        rect.x = x - centreX;
-        rect.y = y - centreY;
-        rect.w = width;
-        rect.h = h * width / w;
+        SetPosition(x - centreX, y - centreY);
+        SetDimensions(width, h * width / w);
     }
     virtual void Update(double delta) {};
 
     virtual void Render(SDL_Renderer* renderer) {
-        SDL_RenderCopyF(renderer, texture, nullptr, &rect);
+        SDL_RenderCopy(renderer, texture, nullptr, &rect);
     };
 
     float centreX() { return rect.x + rect.w / 2.0f; }
     float centreY() { return rect.y + rect.h / 2.0f; }
 
-    float x() { return rect.x; }
-    float y() { return rect.y; }
-    float w() { return rect.w; }
-    float h() { return rect.h; }
+    float x() { return position.x; }
+    float y() { return position.y; }
+    int w() { return rect.w; }
+    int h() { return rect.h; }
 
-    SDL_FRect Rect() { return rect; }
+    SDL_Rect Rect() { return rect; }
 
-    void Destroy() { destroyed = true; }
+    virtual void Destroy() { destroyed = true; }
     virtual bool isDestroyed() { return destroyed; }
 
 protected:
     SDL_Texture* texture;
-    SDL_FRect rect;
+
+    void SetPosition(float x, float y) {
+        position = {.x = x, .y = y};
+        rect.x = std::roundf(x);
+        rect.y = std::roundf(y);
+    }
+
+    void SetX(float x) {
+        SetPosition(x, position.y);
+    }
+
+    void SetY(float y) {
+        SetPosition(position.x, y);
+    }
+
+    void ShiftPosition(float x, float y) {
+        SetPosition(position.x + x, position.y + y);
+    }
+
+    void ShiftX(float x) {
+        SetPosition(position.x + x, position.y);
+    }
+
+    void ShiftY(float y) {
+        SetPosition(position.x, position.y + y);
+    }
+
+    void SetDimensions(int w, int h) {
+        rect.w = w;
+        rect.h = h;
+    }
+
+private:
+    FPoint position;
+    SDL_Rect rect;
     bool destroyed = false;
 };
 
