@@ -7,18 +7,19 @@ Player::Player(Assets* assets, enum PlayerId playerId, int x, int bottomY, int s
     // Boat
     std::string textureName = "ship" + std::to_string(PlayerIdExtensions::Value(playerId));
     texture = assets->get(textureName);
-    auto [ width, height ] = assets->dimensions(textureName);
-    auto [ ballWidth, ballHeight ] = assets->dimensions("cannon_ball");
-    rect.x = x - width / 2.0f;
-    rect.y = bottomY - height - ballHeight;
-    rect.w = width;
-    rect.h = height;
+    auto dimensions = assets->dimensions(textureName); //TODO: C++17: auto [ width, height ] =
+    auto width = std::get<0>(dimensions);
+    auto height = std::get<1>(dimensions);
+    dimensions = assets->dimensions("cannon_ball"); //TODO: C++17: auto [ ballWidth, ballHeight ] =
+    auto ballHeight = std::get<1>(dimensions);
+    SetPosition(x - width / 2.0f, bottomY - height - ballHeight);
+    SetDimensions(width, height);
 
     // Cannon
-    cannon = new PlayerCannon(assets, rect.x, rect.y);
+    cannon = new PlayerCannon(assets, this->x(), this->y());
 
     // Crosshair
-    crosshair = new Crosshair(assets, playerId, x, rect.y - rect.h * 2, screenWidth, rect.y);
+    crosshair = new Crosshair(assets, playerId, x, this->y() - this->h() * 2, screenWidth, this->y());
 
     recalculateCannonAngle();
 }
@@ -89,7 +90,8 @@ void Player::RestockAmmo(int ammo) {
     for (auto &ball : ammoUi)
         delete ball;
     ammoUi = {};
-    auto [width, height] = assets->dimensions("cannon_ball");
+    auto dimensions = assets->dimensions("cannon_ball"); //TODO: C++17: auto [ width, height ] =
+    auto width = std::get<0>(dimensions);
     for (int i = 0; i < ammo; ++i) {
         ammoUi.push_back(new GameObject(assets->get("cannon_ball"), x() + width * i, y() + h(), 0, 0));
     }

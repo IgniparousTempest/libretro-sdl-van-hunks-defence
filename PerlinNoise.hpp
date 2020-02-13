@@ -66,7 +66,7 @@ namespace siv
             reseed(seed);
         }
 
-        template <class URNG, std::enable_if_t<!std::is_arithmetic_v<URNG>>* = nullptr>
+        template <class URNG, std::enable_if_t<!std::is_arithmetic<URNG>::value>* = nullptr>
         explicit PerlinNoise(URNG& urng)
         {
             reseed(urng);
@@ -87,7 +87,7 @@ namespace siv
             }
         }
 
-        template <class URNG, std::enable_if_t<!std::is_arithmetic_v<URNG>>* = nullptr>
+        template <class URNG, std::enable_if_t<!std::is_arithmetic<URNG>::value>* = nullptr>
         void reseed(URNG& urng)
         {
             for (size_t i = 0; i < 256; ++i)

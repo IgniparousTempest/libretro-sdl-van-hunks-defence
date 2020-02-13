@@ -20,7 +20,7 @@ EnemyCannonBallFactory::EnemyCannonBallFactory(Assets *assets, int startX, int e
 
 void EnemyCannonBallFactory::LoadCannons(int number, float timeWindow) {
     elapsedTime = 0;
-    pendingCannonBalls = {};
+    pendingCannonBalls = std::priority_queue<float, std::vector<float>, std::greater<>>();
     std::uniform_real_distribution<> dist(0.0f, timeWindow);
     for (int i = 0; i < number; ++i)
         pendingCannonBalls.push(dist(rng));

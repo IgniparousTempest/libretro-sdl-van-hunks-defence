@@ -6,7 +6,9 @@
 
 Background::Background(Assets *assets, int screenWidth, int screenHeight) {
     this->assets = assets;
-    auto [ tileWidth, tileHeight ] = assets->dimensions("tile_water");
+    auto dimensions = assets->dimensions("tile_water"); //TODO: C++17: auto [ tileWidth, tileHeight ] =
+    auto tileWidth = std::get<0>(dimensions);
+    auto tileHeight = std::get<1>(dimensions);
     width = ceil(screenWidth / static_cast<double>(tileWidth)) * scale;
     height = ceil(screenHeight / static_cast<double>(tileHeight)) * scale;
     this->tileWidth = static_cast<float>(screenWidth) / static_cast<float>(width);
@@ -127,7 +129,8 @@ void Background::waterTiles(const std::vector<std::vector<bool>> &map, int x, in
 
 void Background::Render(SDL_Renderer *renderer) {
     anim.Update();
-    auto [ wWater, hWater ] = assets->dimensions("tile_water_animated");
+    auto dimensions = assets->dimensions("tile_water_animated"); //TODO: C++17: auto [ wWater, hWater ] =
+    auto hWater = std::get<0>(dimensions);
     auto water = assets->get("tile_water_animated");
     SDL_Rect src;
     src.x = hWater * anim.GetCurrentFrame();
@@ -135,15 +138,15 @@ void Background::Render(SDL_Renderer *renderer) {
     src.w = hWater;
     src.h = hWater;
 
-    SDL_FRect dest;
+    SDL_Rect dest;
     dest.w = tileWidth;
     dest.h = tileHeight;
     for (int x = 0; x < width; ++x) {
         for (int y = 0; y < height; ++y) {
-            dest.x = tileWidth * static_cast<float>(x);
-            dest.y = tileHeight * static_cast<float>(y);
-            SDL_RenderCopyF(renderer, water, &src, &dest);
-            SDL_RenderCopyF(renderer, tiles.at(y).at(x), nullptr, &dest);
+            dest.x = tileWidth * x;
+            dest.y = tileHeight * y;
+            SDL_RenderCopy(renderer, water, &src, &dest);
+            SDL_RenderCopy(renderer, tiles.at(y).at(x), nullptr, &dest);
         }
     }
 }

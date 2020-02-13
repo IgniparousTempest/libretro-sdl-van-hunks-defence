@@ -1,35 +1,29 @@
 #include "Crosshair.hpp"
 
-Crosshair::Crosshair(Assets *assets, enum PlayerId playerId, float x, float y, int xMax, int yMax) : xMax(xMax), yMax(yMax) {
-    std::string assetName = "crosshair" + std::to_string(PlayerIdExtensions::Value(playerId));
-    texture = assets->get(assetName);
-    auto [ w, h ] = assets->dimensions(assetName);
-    rect.x = x - w / 2.0f;
-    rect.y = y - h / 2.0f;
-    rect.w = w;
-    rect.h = h;
+Crosshair::Crosshair(Assets *assets, enum PlayerId playerId, float x, float y, int xMax, int yMax) :
+        GameObject(assets->get("crosshair" + std::to_string(PlayerIdExtensions::Value(playerId))), x, y), xMax(xMax), yMax(yMax) {
 }
 
 void Crosshair::moveLeft(float deltaTime) {
-    rect.x -= speed * deltaTime;
-    if (rect.x < 0)
-        rect.x = 0;
+    ShiftX(-speed * deltaTime);
+    if (x() < 0)
+        SetX(0);
 }
 
 void Crosshair::moveRight(float deltaTime) {
-    rect.x += speed * deltaTime;
-    if (rect.x > xMax - rect.w)
-        rect.x = xMax - rect.w;
+    ShiftX(speed * deltaTime);
+    if (x() > xMax - w())
+        SetX(xMax - w());
 }
 
 void Crosshair::moveUp(float deltaTime) {
-    rect.y -= speed * deltaTime;
-    if (rect.y < 0)
-        rect.y = 0;
+    ShiftY(-speed * deltaTime);
+    if (y() < 0)
+        SetY(0);
 }
 
 void Crosshair::moveDown(float deltaTime) {
-    rect.y += speed * deltaTime;
-    if (rect.y > yMax - rect.h)
-        rect.y = yMax - rect.h;
+    ShiftY(speed * deltaTime);
+    if (y() > yMax - h())
+        SetY(yMax - h());
 }

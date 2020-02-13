@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <stdexcept>
 
 enum class PlayerId { computer, player1, player2, player3, player4 };
 

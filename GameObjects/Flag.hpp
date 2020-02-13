@@ -12,10 +12,8 @@ public:
 
         int w, h;
         SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
-        rect.x = x - (w / frames) / 2.0f;
-        rect.y = y - h / 2.0f;
-        rect.w = w / frames;
-        rect.h = h;
+        SetPosition(x - (w / frames) / 2.0f, y - h / 2.0f);
+        SetDimensions(w / frames, h);
 
         src.x = 0;
         src.y = 0;
@@ -34,7 +32,8 @@ public:
         src.x = src.w * anim.GetCurrentFrame();
 //        src.w -= 1;
 
-        SDL_RenderCopyExF(renderer, texture, &src, &rect, angle, nullptr, flip);
+        auto dst = Rect();
+        SDL_RenderCopyEx(renderer, texture, &src, &dst, angle, nullptr, flip);
 //        src.w += 1;
     }
 

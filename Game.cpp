@@ -1,7 +1,6 @@
 #include <iostream>
 #include <algorithm>
 #include "Game.hpp"
-#include "SDL_extensions.h"
 #include "GameObjects/BurningTreasureShip.hpp"
 #include "GameObjects/BurningPlayerShip.hpp"
 
@@ -26,8 +25,8 @@ void Game::StartNewGame(std::vector<PlayerId> readyPlayers) {
     SpawnShips(readyPlayers);
 
     // Reset Scores
-    for (auto &[key, score] : scores)
-        delete score;
+    for (auto const &entry : scores)
+        delete entry.second;
     scores = {};
     for(auto const& playerId : PlayerIdExtensions::HumanPlayers())
         scores.emplace(playerId, new Score(assets, players[playerId]->centreX(), 0));
@@ -97,8 +96,8 @@ void Game::Update(double frameTime) {
                 auto dest = obj->Destination();
                 for (auto &playerId : PlayerIdExtensions::HumanPlayers()) {
                     auto player = players[playerId];
-                    auto rect = player->Rect();
-                    if (SDL_FPointInFRect(&dest, &rect)) {
+                    FRect rect = {player->x(), player->y(), static_cast<float>(player->w()), static_cast<float>(player->h())};
+                    if (FPointInFRect(&dest, &rect)) {
                         std::cout << "Enemy cannon ball hit player " << PlayerIdExtensions::Value(playerId) << "."
                                   << std::endl;
                         BurnPlayerShip(player);
@@ -106,8 +105,8 @@ void Game::Update(double frameTime) {
                     }
                 }
                 for (auto &ship : treasureShips) {
-                    auto rect = ship->Rect();
-                    if (SDL_FPointInFRect(&dest, &rect)) {
+                    FRect rect = {ship->x(), ship->y(), static_cast<float>(ship->w()), static_cast<float>(ship->h())};
+                    if (FPointInFRect(&dest, &rect)) {
                         std::cout << "Enemy cannon ball hit a treasure ship." << std::endl;
                         burningShips.push_back(new BurningTreasureShip(assets, ship->centreX(), ship->centreY()));
                         ship->Destroy();
@@ -151,8 +150,8 @@ void Game::Update(double frameTime) {
 
 void Game::Render(SDL_Renderer *renderer) {
     background->Render(renderer);
-    for(auto const& [id, player] : players)
-        player->Render(renderer);
+    for(auto const& entry : players)
+        entry.second->Render(renderer);
     for (auto &obj : treasureShips)
         obj->Render(renderer);
     for (auto &obj : burningShips)
@@ -161,10 +160,10 @@ void Game::Render(SDL_Renderer *renderer) {
         obj->Render(renderer);
     for (auto &obj : explosions)
         obj->Render(renderer);
-    for(auto const& [id, player] : players)
-        player->RenderTopLayers(renderer);
-    for(auto const& [id, score] : scores)
-        score->Render(renderer);
+    for(auto const& entry : players)
+        entry.second->RenderTopLayers(renderer);
+    for(auto const& entry : scores)
+        entry.second->Render(renderer);
 
     if (state == GameState::scoring)
         scoreScreenOverlay->Render(renderer);
@@ -175,15 +174,16 @@ void Game::Render(SDL_Renderer *renderer) {
 
 void Game::SpawnShips(std::vector<enum PlayerId> readyPlayers) {
     // Clean up previous game;
-    for (auto &[key, ship] : players)
-        delete ship;
+    for (auto const &entry : players)
+        delete entry.second;
     for (auto &ship : treasureShips)
         delete ship;
     players = {};
     treasureShips = {};
 
     // Set parameters
-    auto [ w, h ] = assets->dimensions("ship1");
+    auto dimensions = assets->dimensions("ship1"); //TODO: C++17: auto [ w, h ] =
+    auto w = std::get<0>(dimensions);
     auto offset = w / 2;
     auto x1 = w / 2 + offset;
     auto x4 = screenWidth - w / 2 - offset;
@@ -316,7 +316,8 @@ bool Game::IsLevelOver() {
 }
 
 int Game::PointScaleFactor() {
-    return std::clamp((level - 1) / 2 + 1, 0, 6);
+//    return std::clamp((level - 1) / 2 + 1, 0, 6); //TODO: C++17 only
+    return std::max(0, std::min((level - 1) / 2 + 1, 6));
 }
 
 std::map<enum PlayerId, Score *> Game::Scores() { return scores; }

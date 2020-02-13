@@ -112,7 +112,9 @@ void ScoreScreenOverlay::CallbackDrawTreasureShip() {
     auto scores = parent->Scores();
     int ships = TreasureShipsAlive();
     const float scoreX = screenWidth / 2.0f + screenWidth * 0.025f;
-    auto [w, h] = assets->dimensions("ship0");
+    auto dimensions = assets->dimensions("ship0"); //TODO: C++17: auto [ w, h ] =
+    auto w = std::get<0>(dimensions);
+    auto h = std::get<1>(dimensions);
     const float scaledWidth = w * 0.5f;
     const float xOffset = scaledWidth * 1.2f;
     const float scaledHalfHeight = (h * 0.5f) / 2.0f;
