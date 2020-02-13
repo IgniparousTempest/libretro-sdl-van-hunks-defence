@@ -24,7 +24,7 @@ private:
     std::mt19937 rng;
     float elapsedTime = 0;
     /// The time offsets until each cannon ball fires. This is a min heap in C++ (it is very ugly).
-    std::priority_queue<float, std::vector<float>, std::greater<>> pendingCannonBalls = {};
+    std::priority_queue<float, std::vector<float>, std::greater<>> pendingCannonBalls;
 
     CannonBall* Fire();
 };
