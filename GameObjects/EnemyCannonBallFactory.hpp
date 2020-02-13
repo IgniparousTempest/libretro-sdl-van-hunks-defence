@@ -20,7 +20,7 @@ private:
     int startX;
     int endX;
     float speed;
-    std::vector<SDL_FRect> targets;
+    std::vector<FRect> targets;
     std::mt19937 rng;
     float elapsedTime = 0;
     /// The time offsets until each cannon ball fires. This is a min heap in C++ (it is very ugly).
