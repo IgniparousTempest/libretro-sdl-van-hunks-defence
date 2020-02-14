@@ -67,10 +67,14 @@ std::vector<PlayerId> GameOverScreenOverlay::ReadyPlayers() {
 }
 
 void GameOverScreenOverlay::PressedStart(PlayerId id) {
-    if (readyPlayers[id])
-        return;
-    timerCountdown.Reset(durationCountDown);
-    readyPlayers[id] = true;
+    if (!readyPlayers[id]) {
+        timerCountdown.Reset(durationCountDown);
+        readyPlayers[id] = true;
+    }
+    else {
+        std::cout << "Skipping 1 second of timer" << std::endl;
+        timerCountdown.Reset(std::floor(timerCountdown.RemainingSeconds()) * 1000 - 500);
+    }
 }
 
 void GameOverScreenOverlay::CallbackCountDownComplete() {

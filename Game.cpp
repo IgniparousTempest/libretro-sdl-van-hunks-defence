@@ -302,8 +302,8 @@ void Game::PressFire(enum PlayerId playerId) {
 
 void Game::PressStart(enum PlayerId playerId) {
     if (state == GameState::over) {
-        gameOverScreenOverlay->PressedStart(playerId);
         std::cout << "Player " << PlayerIdExtensions::Value(playerId) << " pressed start." << std::endl;
+        gameOverScreenOverlay->PressedStart(playerId);
     }
 }
 

@@ -130,7 +130,7 @@ void Background::waterTiles(const std::vector<std::vector<bool>> &map, int x, in
 void Background::Render(SDL_Renderer *renderer) {
     anim.Update();
     auto dimensions = assets->dimensions("tile_water_animated"); //TODO: C++17: auto [ wWater, hWater ] =
-    auto hWater = std::get<0>(dimensions);
+    auto hWater = std::get<1>(dimensions);
     auto water = assets->get("tile_water_animated");
     SDL_Rect src;
     src.x = hWater * anim.GetCurrentFrame();

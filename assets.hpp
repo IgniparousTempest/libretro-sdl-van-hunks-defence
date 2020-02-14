@@ -1,6 +1,7 @@
 #ifndef SUPER_MISSILE_COMMAND_ASSETS_HPP
 #define SUPER_MISSILE_COMMAND_ASSETS_HPP
 
+#include <iostream>
 #include <map>
 #include <string>
 #include <SDL_mixer.h>
@@ -65,8 +66,11 @@ public:
                 "flag_voc_fluttering2",
         };
         std::string texturesFolder = "./assets/";
-        for (auto &name : textureFiles)
+        for (auto &name : textureFiles) {
             assets[name] = Auxiliary::loadTexture(renderer, (texturesFolder + name + ".png").c_str());
+            if(assets[name] == nullptr)
+                std::cerr << "Unable to load image " << name << "! SDL_image Error: " << IMG_GetError() << std::endl;
+        }
 
         std::string soundsFolder = "./assets/";
         std::vector<std::string> soundFiles = {
